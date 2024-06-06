@@ -13,7 +13,7 @@ import { UrlShortenerService } from './services/url-shortener.service';
 })
 export class AppComponent {
 
-  allUrls = this.urlShortnerService.getAllUrls()
-
-  constructor(private readonly urlShortnerService: UrlShortenerService) {}
+  informationReceived(event: string): void {
+    alert(event)
+  }
 }
