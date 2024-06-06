@@ -1,13 +1,13 @@
 <p>Salut {{name}} ! </p>
 <button (click)="sendMessage()">Envoyer</button>
-<p *ngFor="let url of allUrls | async">
+<p *ngFor="let url of urls">
     {{url.originalUrl}} - 
     <a [href]="env.baseApiUrl + '/' + url.shortUrl" target="_blank">{{env.baseApiUrl}}/{{url.shortUrl}}</a>
 </p>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <label>
       Url:
-      <input type="text" formControlName="url">
+      <input type="text" formControlName="originalUrl">
     </label>
     <br>
     <button type="submit">Se connecter</button>

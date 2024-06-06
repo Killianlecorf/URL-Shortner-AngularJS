@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {env} from '../environment/env'
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { UrlShortener } from '../interfaces/url-Shortener';
 
 @Component({
   selector: 'app-url-shortened',
@@ -16,25 +17,34 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 export class UrlShortenedComponent {
 
   env = env
+  urlFC = new FormControl<string>('', {nonNullable: true})
+  urls: UrlShortener[] = []
+
+  allUrls = this.urlShortenerService.getAllUrls()
+
+  constructor(private readonly urlShortenerService: UrlShortenerService) {
+    this.allUrls.subscribe((res) => {
+      this.urls = res
+    })
+  }
 
   @Input() name: string = ''
   @Output() nameChange: EventEmitter<string> = new EventEmitter<string>()
 
-  allUrls = this.urlShortnerService.getAllUrls()
 
-  constructor(private readonly urlShortnerService: UrlShortenerService) {}
 
   sendMessage() {
     this.nameChange.emit('Bien reçu')
   }
 
   form: FormGroup = new FormGroup({
-    url: new FormControl('')
+    originalUrl: new FormControl('')
   });
 
   onSubmit() {
-    const url = this.form.get('url')?.value;
-    alert(`url: ${url}`);
+    this.urlShortenerService.createShortUrl(this.form.getRawValue().originalUrl).subscribe((res) => {
+      this.urls.push(res)
+      this.form.controls['originalUrl'].setValue('')
+    })
   }
-
 }
